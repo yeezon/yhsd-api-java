@@ -4,7 +4,7 @@
 
 ## 安装
 
-等待上传至maven,在此之前,你可以下载我们已经打包好的jar
+等待上传至maven,在此之前,你可以[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0/YhsdSdk.jar){:target="_blank"}我们已经打包好的jar
 
 ## 介绍
 ```java
