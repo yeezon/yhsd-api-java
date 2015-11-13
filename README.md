@@ -4,7 +4,7 @@
 
 ## 安装
 
-等待上传至maven,在此之前,你可以[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0/YhsdSdk.jar)我们已经打包好的jar
+等待上传至maven,在此之前,你可以下载我们已经打包好的jar
 
 ## 介绍
 ```java
@@ -47,8 +47,8 @@ auth = Yhsd.getInstance().auth(appkey,appSecret,redirectUrl,scope);//公有
 /**
  * 验证请求合法性
  *
- * @param {String} hmac  请求中的hmac参数
- * @param {String} param 请求中的其它参数  account_id=1&code=a84a110d86d2452eb3e2af4cfb8a3828&shop_key=a94a110d86d2452eb3e2af4cfb8a3828&time_stamp=2013-08-27T13:58:35Z
+ * @param {String} hmac  request中的的hmac
+ * @param {String} param 需要验证的内容 
  * @return {boolean} 验证结果
  */
 auth.verifyHmac(hmac,param);
