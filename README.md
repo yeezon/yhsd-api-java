@@ -4,7 +4,23 @@
 
 ## 安装
 
-等待上传至maven,在此之前,,你可以[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0/YhsdSdk.jar)我们已经打包好的jar
+
+#### maven
+```xml
+<dependency>
+    <groupId>com.youhaosuda</groupId>
+    <artifactId>yhsd-api-java</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+<br>
+#### gradle
+```coffeescript
+compile 'com.youhaosuda:yhsd-api-java:1.0'
+```
+<br>
+或者你也可以直接[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0/YhsdSdk.jar)我们已经打包好的jar
+
 
 ## 介绍
 ```java
@@ -48,14 +64,14 @@ auth = Yhsd.getInstance().auth(appkey,appSecret,redirectUrl,scope);//公有
  * 验证请求合法性
  *
  * @param {String} hmac  request中的的hmac
- * @param {String} param 需要验证的内容 
+ * @param {String} param 需要验证的内容
  * @return {boolean} 验证结果
  */
 auth.verifyHmac(hmac,param);
 
 /**
  * 获取授权地址，用于开放应用
- * 
+ *
  *
  * @param {String} shopKey shopKey,可在请求中获取
  * @param {String} state   可选，若包含此参数，则在用户授权后跳转，将这个参数返回
@@ -68,12 +84,12 @@ auth.getAuthorizeUrl(shopKey, state);
  *
  * @param {String} code 公有应用需要填写此参数 可在请求中获取,详情见官网更多=>文档中心=>应用开发=>开放API=>获取授权=>第四步
  * @return {YhsdResponse} token
- * 
+ *
  */
 auth.getToken(code);
 ```
 
-详见 
+详见
 https://docs.youhaosuda.com/app/s/553e33880abc3e6f3e000026
 
 ### 例子
@@ -140,7 +156,7 @@ api.post(path, json);
 api.delete(path);
 ```
 
-详见 
+详见
 https://docs.youhaosuda.com/app/553e335f0abc3e6f3e000023
 
 ### 例子
@@ -165,8 +181,8 @@ String body = resp.getBody();
 ## 本地调试
 
 ```java
-String apiAddr = "your local api server address"; 
-String appAddr = "your local app server address"; 
+String apiAddr = "your local api server address";
+String appAddr = "your local app server address";
 String httpProtocol = "your http protocol";
 Yhsd yhsd = Yhsd.getInstance(apiAddr,appAddr,httpProtocol);//api,auth调用方式不变
 ```
