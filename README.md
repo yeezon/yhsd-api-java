@@ -87,6 +87,16 @@ auth.getAuthorizeUrl(shopKey, state);
  *
  */
 auth.getToken(code);
+
+/**
+ * 获取第三方接入支持的用户加密字符串
+ *
+ * @param {String} customerData 用户信息的json字符串
+ * @param {String} strKey 接入密钥
+ * @return {String} customerDataEncrypt 加密后的用户信息字符串
+ *
+ */
+auth.thirdAppAesEncrypt(customerData,strKey)
 ```
 
 详见

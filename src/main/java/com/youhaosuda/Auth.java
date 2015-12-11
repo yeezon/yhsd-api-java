@@ -5,12 +5,15 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 import sun.misc.BASE64Encoder;
 
+import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.net.URLEncoder;
 
@@ -26,11 +29,19 @@ public class Auth {
     private String appHost = "apps.youhaosuda.com";
     private String httpProtocol = "https";
     private Mac mac;
+
+    private Cipher cipher;
+    private final String CIPHER_ALGORITHM_CBC = "AES/CBC/PKCS5Padding";
+    private Key secretKey;
+    private IvParameterSpec iv;
+
     private static Auth instance = new Auth();
 
-    private Auth() {}
 
-    protected static Auth getInstance(String appHost, String httpProtocol, String appKey, String appSecret,String redirectUrl,String[] scope) {
+    private Auth() {
+    }
+
+    protected static Auth getInstance(String appHost, String httpProtocol, String appKey, String appSecret, String redirectUrl, String[] scope) {
         instance.appHost = appHost;
         instance.httpProtocol = httpProtocol;
         instance.appKey = appKey;
@@ -51,7 +62,7 @@ public class Auth {
         return instance;
     }
 
-    protected static Auth getInstance(String appHost, String httpProtocol, String appKey, String appSecret,String redirectUrl) {
+    protected static Auth getInstance(String appHost, String httpProtocol, String appKey, String appSecret, String redirectUrl) {
         instance.appHost = appHost;
         instance.httpProtocol = httpProtocol;
         instance.appKey = appKey;
@@ -134,10 +145,10 @@ public class Auth {
         RequestBuilder requestBuilder = RequestBuilder.post()
                 .setUri(this.httpProtocol + "://" + this.appHost + "/oauth2/token")
                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addParameter("grant_type","authorization_code")
-                .addParameter("code",code)
-                .addParameter("client_id",this.appKey)
-                .addParameter("redirect_uri",this.appRedirectUrl);
+                .addParameter("grant_type", "authorization_code")
+                .addParameter("code", code)
+                .addParameter("client_id", this.appKey)
+                .addParameter("redirect_uri", this.appRedirectUrl);
         HttpUriRequest request = requestBuilder.build();
         try {
             return EntityUtils.toString(Request.getHttpClient().execute(request).getEntity());
@@ -158,14 +169,25 @@ public class Auth {
                 .setUri(this.httpProtocol + "://" + this.appHost + "/oauth2/token")
                 .setHeader("Content-Type", "application/x-www-form-urlencoded");
         String auth = "Basic ";
-        auth += new BASE64Encoder().encode((this.appKey + ":" + this.appSecret).getBytes("UTF-8")).replaceAll("\\s","");
+        auth += new BASE64Encoder().encode((this.appKey + ":" + this.appSecret).getBytes("UTF-8")).replaceAll("\\s", "");
         requestBuilder = requestBuilder.setHeader("Authorization", auth)
-                .addParameter("grant_type","client_credentials");
+                .addParameter("grant_type", "client_credentials");
         HttpUriRequest request = requestBuilder.build();
         return Request.request(request);
     }
 
-    private String getScope(String[] scopeArray){
+    /**
+     * 第三方接入支持
+     * @param customerData
+     * @param strKey
+     * @return
+     * @throws Exception
+     */
+    public String thirdAppAesEncrypt(String customerData, String strKey) throws Exception {
+        return aesEncrypt(strKey, customerData);
+    }
+
+    private String getScope(String[] scopeArray) {
         String scopeString = scopeArray[0];
         if (scopeArray.length > 1) {
             for (int i = 0; i < scopeArray.length; i++) {
@@ -176,5 +198,41 @@ public class Auth {
             }
         }
         return scopeString;
+    }
+
+
+    /**
+     * 使用AES 算法 加密，默认模式 AES/CBC/PKCS5Padding
+     */
+    private String aesEncrypt(String strKey, String strData) throws Exception {
+        cipher = Cipher.getInstance(CIPHER_ALGORITHM_CBC);
+        secretKey = getKey(strKey);
+        iv = getIV(strKey);
+
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
+        byte[] encrypt = cipher.doFinal(strData.getBytes());
+        return urlSafeBase64(new BASE64Encoder().encode(encrypt));
+    }
+
+    private IvParameterSpec getIV(String strIv) throws UnsupportedEncodingException {
+        byte[] arrBTmp = strIv.getBytes("UTF-8");
+        byte[] arrB = new byte[16];
+        for (int i = 0; i + 16 < arrBTmp.length && i < arrB.length; i++) {
+            arrB[i] = arrBTmp[i + 16];
+        }
+        return new IvParameterSpec(arrB);
+    }
+
+    private Key getKey(String strKey) throws Exception {
+        byte[] arrBTmp = strKey.getBytes("UTF-8");
+        byte[] arrB = new byte[16];
+        for (int i = 0; i < arrBTmp.length && i < arrB.length; i++) {
+            arrB[i] = arrBTmp[i];
+        }
+        return new SecretKeySpec(arrB, "AES");
+    }
+
+    private String urlSafeBase64(String source) throws Exception {
+        return source.replace("+", "-").replace("/", "_");
     }
 }
