@@ -19,7 +19,7 @@
 compile 'com.youhaosuda:yhsd-api-java:1.0'
 ```
 <br>
-或者你也可以直接[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0/YhsdSdk.jar)我们已经打包好的jar
+或者你也可以直接[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0.1/yhsd-api-java.jar)我们已经打包好的jar
 
 
 ## 介绍
