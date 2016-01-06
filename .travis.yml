@@ -3,6 +3,6 @@ jdk:
  - 'oraclejdk7'
 script: 'mvn test'
 after_success:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:report
+  - mvn clean cobertura:cobertura coveralls:report
 
 
