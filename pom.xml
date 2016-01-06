@@ -30,6 +30,8 @@
     <properties>
         <commons-httpclient.version>4.5</commons-httpclient.version>
         <junit.version>4.12</junit.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     <dependencies>
         <!--  JUnit  -->
