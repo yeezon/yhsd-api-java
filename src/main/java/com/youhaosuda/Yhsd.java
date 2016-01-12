@@ -64,7 +64,7 @@ public class Yhsd {
      * @param scope       插件/应用的权限
      * @return Auth的实例
      */
-    public Auth auth(String appKey, String appSecret, String redirectUrl, String[] scope) {
+    public Auth auth(String appKey, String appSecret, String redirectUrl, String[] scope) throws YhsdException {
         String appHost = this.localAppHost == null ? this.appHost : this.localAppHost;
         String httpProtocol = this.localHttpProtocol == null ? this.httpProtocol : this.localHttpProtocol;
         return Auth.getInstance(appHost, httpProtocol, appKey, appSecret, redirectUrl, scope);

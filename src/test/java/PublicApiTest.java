@@ -5,8 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by chenyg on 16/1/12.
@@ -23,6 +26,16 @@ public class PublicApiTest {
     public void httpGet() throws IOException {
         YhsdResponse yhsdResponse = api.get("shop");
         assertEquals(yhsdResponse.getStatusCode(), 200);
+    }
+
+    @Test
+    public void httpGetWithParam() throws IOException {
+        Map param = new HashMap();
+        param.put("fields","id,handle,images");
+        YhsdResponse yhsdResponse = api.get("products",param);
+        assertEquals(yhsdResponse.getStatusCode(), 200);
+        Map<String, String> header = yhsdResponse.getHeader();
+        assertNotEquals(header,null);
     }
 
     @Test

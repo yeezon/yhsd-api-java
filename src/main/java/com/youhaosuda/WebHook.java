@@ -3,6 +3,8 @@ package com.youhaosuda;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -21,17 +23,13 @@ public class WebHook {
     private WebHook() {
     }
 
-    public boolean verifyHmac(String hmac, String responseBody) {
+    public boolean verifyHmac(String hmac, String responseBody) throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKey macKey = new SecretKeySpec(instance.webHookToken.getBytes(), "HmacSHA256");
         Mac mac;
-        try {
-            mac = Mac.getInstance("HmacSHA256");
-            mac.init(macKey);
-            byte[] bytes = mac.doFinal(responseBody.getBytes());
-            return Util.byteArrayToHexString(bytes).equals(hmac);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        mac = Mac.getInstance("HmacSHA256");
+        mac.init(macKey);
+        byte[] bytes = mac.doFinal(responseBody.getBytes());
+        return Util.byteArrayToHexString(bytes).equals(hmac);
+
     }
 }

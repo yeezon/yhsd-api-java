@@ -3,6 +3,9 @@ import com.youhaosuda.Yhsd;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -16,7 +19,7 @@ public class WebHookTest {
     }
 
     @Test
-    public void verifyHmac(){
+    public void verifyHmac() throws InvalidKeyException, NoSuchAlgorithmException {
         assertEquals(webHook.verifyHmac("1234","1234"),false);
     }
 }
