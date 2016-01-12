@@ -41,15 +41,16 @@ public class Auth {
     private Auth() {
     }
 
-    protected static Auth getInstance(String appHost, String httpProtocol, String appKey, String appSecret, String redirectUrl, String[] scope) {
+    protected static Auth getInstance(String appHost, String httpProtocol, String appKey, String appSecret, String redirectUrl, String[] scope) throws YhsdException {
         instance.appHost = appHost;
         instance.httpProtocol = httpProtocol;
         instance.appKey = appKey;
         instance.appSecret = appSecret;
         instance.appRedirectUrl = redirectUrl;
-        if (scope.length > 0) {
-            instance.scope = scope;
+        if (scope.length < 1) {
+            throw new YhsdException("公有应用必须注明所需要的权限");
         }
+        instance.scope = scope;
         SecretKey macKey = new SecretKeySpec(instance.appSecret.getBytes(), "HmacSHA256");
         try {
             instance.mac = Mac.getInstance("HmacSHA256");
@@ -141,7 +142,7 @@ public class Auth {
      * @param code 可在请求中获取
      * @return token
      */
-    public String getToken(String code) {
+    public YhsdResponse getToken(String code) {
         RequestBuilder requestBuilder = RequestBuilder.post()
                 .setUri(this.httpProtocol + "://" + this.appHost + "/oauth2/token")
                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
@@ -150,12 +151,8 @@ public class Auth {
                 .addParameter("client_id", this.appKey)
                 .addParameter("redirect_uri", this.appRedirectUrl);
         HttpUriRequest request = requestBuilder.build();
-        try {
-            return EntityUtils.toString(Request.getHttpClient().execute(request).getEntity());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return Request.request(request);
+
     }
 
     /**
@@ -164,12 +161,16 @@ public class Auth {
      * @return token
      * @throws IOException
      */
-    public YhsdResponse getToken() throws IOException {
+    public YhsdResponse getToken() {
         RequestBuilder requestBuilder = RequestBuilder.post()
                 .setUri(this.httpProtocol + "://" + this.appHost + "/oauth2/token")
                 .setHeader("Content-Type", "application/x-www-form-urlencoded");
         String auth = "Basic ";
-        auth += new BASE64Encoder().encode((this.appKey + ":" + this.appSecret).getBytes("UTF-8")).replaceAll("\\s", "");
+        try {
+            auth += new BASE64Encoder().encode((this.appKey + ":" + this.appSecret).getBytes("UTF-8")).replaceAll("\\s", "");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         requestBuilder = requestBuilder.setHeader("Authorization", auth)
                 .addParameter("grant_type", "client_credentials");
         HttpUriRequest request = requestBuilder.build();
@@ -178,41 +179,35 @@ public class Auth {
 
     /**
      * 第三方接入支持
+     * 使用AES 算法 加密，默认模式 AES/CBC/PKCS5Padding
+     *
      * @param customerData
      * @param strKey
      * @return
      * @throws Exception
      */
     public String thirdAppAesEncrypt(String customerData, String strKey) throws Exception {
-        return aesEncrypt(strKey, customerData);
-    }
-
-    private String getScope(String[] scopeArray) {
-        String scopeString = scopeArray[0];
-        if (scopeArray.length > 1) {
-            for (int i = 0; i < scopeArray.length; i++) {
-                scopeString += scopeArray[i];
-                if (i != scopeArray.length - 1) {
-                    scopeString += ",";
-                }
-            }
-        }
-        return scopeString;
-    }
-
-
-    /**
-     * 使用AES 算法 加密，默认模式 AES/CBC/PKCS5Padding
-     */
-    private String aesEncrypt(String strKey, String strData) throws Exception {
         cipher = Cipher.getInstance(CIPHER_ALGORITHM_CBC);
         secretKey = getKey(strKey);
         iv = getIV(strKey);
 
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
-        byte[] encrypt = cipher.doFinal(strData.getBytes());
+        byte[] encrypt = cipher.doFinal(customerData.getBytes());
         return urlSafeBase64(new BASE64Encoder().encode(encrypt));
     }
+
+
+    private String getScope(String[] scopeArray) {
+        String scopeString = scopeArray[0];
+        for (int i = 0; i < scopeArray.length; i++) {
+            scopeString += scopeArray[i];
+            if (i != scopeArray.length - 1) {
+                scopeString += ",";
+            }
+        }
+        return scopeString;
+    }
+
 
     private IvParameterSpec getIV(String strIv) throws UnsupportedEncodingException {
         byte[] arrBTmp = strIv.getBytes("UTF-8");
