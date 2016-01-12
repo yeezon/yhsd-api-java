@@ -141,7 +141,7 @@ public class Auth {
      * @param code 可在请求中获取
      * @return token
      */
-    public String getToken(String code) {
+    public YhsdResponse getToken(String code) {
         RequestBuilder requestBuilder = RequestBuilder.post()
                 .setUri(this.httpProtocol + "://" + this.appHost + "/oauth2/token")
                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
@@ -150,12 +150,8 @@ public class Auth {
                 .addParameter("client_id", this.appKey)
                 .addParameter("redirect_uri", this.appRedirectUrl);
         HttpUriRequest request = requestBuilder.build();
-        try {
-            return EntityUtils.toString(Request.getHttpClient().execute(request).getEntity());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return Request.request(request);
+
     }
 
     /**
@@ -164,12 +160,16 @@ public class Auth {
      * @return token
      * @throws IOException
      */
-    public YhsdResponse getToken() throws IOException {
+    public YhsdResponse getToken() {
         RequestBuilder requestBuilder = RequestBuilder.post()
                 .setUri(this.httpProtocol + "://" + this.appHost + "/oauth2/token")
                 .setHeader("Content-Type", "application/x-www-form-urlencoded");
         String auth = "Basic ";
-        auth += new BASE64Encoder().encode((this.appKey + ":" + this.appSecret).getBytes("UTF-8")).replaceAll("\\s", "");
+        try {
+            auth += new BASE64Encoder().encode((this.appKey + ":" + this.appSecret).getBytes("UTF-8")).replaceAll("\\s", "");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         requestBuilder = requestBuilder.setHeader("Authorization", auth)
                 .addParameter("grant_type", "client_credentials");
         HttpUriRequest request = requestBuilder.build();
@@ -178,6 +178,7 @@ public class Auth {
 
     /**
      * 第三方接入支持
+     *
      * @param customerData
      * @param strKey
      * @return
@@ -186,6 +187,7 @@ public class Auth {
     public String thirdAppAesEncrypt(String customerData, String strKey) throws Exception {
         return aesEncrypt(strKey, customerData);
     }
+
 
     private String getScope(String[] scopeArray) {
         String scopeString = scopeArray[0];

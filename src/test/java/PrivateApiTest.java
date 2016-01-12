@@ -5,39 +5,30 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 /**
- * Created by chenyg on 15/11/11.
+ * Created by chenyg on 16/1/12.
+ * 私有API测试
  */
-public class ApiTest {
+public class PrivateApiTest {
     Api api;
-
     @Before
-    public void initApi() {
-        api = Yhsd.getInstance().api("fbc7f83524f14e358a325a5066acd741");
+    public void initApi() throws IOException {
+        //cbac23f353354de6b9675ae3cc4a2e13
+        String token = Yhsd.getInstance().auth("a41be9a8d7884a4784c6c003cd1fcaa1","bc69aa7b511447c2b4da1de9a109217e","http:www.youhaosuda.com").getToken().getBody();
+        api = Yhsd.getInstance().api(token.substring(10,token.length() - 2));
     }
 
     @Test
-    public void getApiInstance() {
-        assertNotEquals(api, null);
-    }
-
-
-    @Test
-    public void privateHttpGet() throws IOException {
-
-        YhsdResponse yhsdResponse = api.get("customers");
+    public void httpGet() throws IOException {
+        YhsdResponse yhsdResponse = api.get("shop");
         assertEquals(yhsdResponse.getStatusCode(), 200);
-
     }
 
     @Test
-    public void privateHttpPostAndDelete() {
+    public void httpPostAndDelete() throws IOException {
         String name = System.currentTimeMillis() + "";
         String body = "{\"meta\":{\"name\":\"" + name + "\",\"owner_id\":\"0\",\"owner_resource\":\"shop\",\"fields\":{\"test\":\"test\"},\"descriptions\":\"test\"}}";
         YhsdResponse yhsdResponse = api.post("metas", body);
@@ -46,13 +37,12 @@ public class ApiTest {
         YhsdResponse delete = api.delete("metas/" + id);
         assertEquals(delete.getStatusCode(), 200);
         assertEquals(yhsdResponse.getStatusCode(), 200);
-        //{"customer":{"addresses":[],"avatar":null,"created_at":"2015-11-12T18:09:47.777+08:00","id":239,"last_in":"2015-11-12T18:09:47.777+08:00","name":"for","notify_email":"for@example.com","notify_phone":"13632269380","reg_identity":"for@example.com","reg_type":"email","updated_at":"2015-11-12T18:09:47.777+08:00"}}
     }
-
     @Test
-    public void httpPut() {
+    public void httpPut(){
+        //14078
         String body = "{\"theme\":{\"name\":\"测试主题\"}}";
-        YhsdResponse yhsdResponse = api.put("themes/13576", body);
+        YhsdResponse yhsdResponse = api.put("themes/14078", body);
         assertEquals(yhsdResponse.getStatusCode(), 200);
     }
 }
