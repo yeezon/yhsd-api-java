@@ -38,7 +38,6 @@ public class Request {
         try {
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             TrustStrategy anyTrustStrategy = new TrustStrategy() {
-                @Override
                 public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
                     return true;
                 }

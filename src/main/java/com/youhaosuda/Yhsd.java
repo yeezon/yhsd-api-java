@@ -83,4 +83,13 @@ public class Yhsd {
         String httpProtocol = this.localHttpProtocol == null ? this.httpProtocol : this.localHttpProtocol;
         return Auth.getInstance(appHost, httpProtocol, appKey, appSecret, redirectUrl);
     }
+
+    /**
+     * 获得一个webHook实例
+     * @param webHookToken
+     * @return
+     */
+    public WebHook webHook(String webHookToken) {
+        return WebHook.getInstance(webHookToken);
+    }
 }
