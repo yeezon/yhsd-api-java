@@ -159,7 +159,6 @@ public class Auth {
      * 私有应用获取token
      *
      * @return token
-     * @throws IOException
      */
     public YhsdResponse getToken() {
         RequestBuilder requestBuilder = RequestBuilder.post()
@@ -181,10 +180,10 @@ public class Auth {
      * 第三方接入支持
      * 使用AES 算法 加密，默认模式 AES/CBC/PKCS5Padding
      *
-     * @param customerData
-     * @param strKey
-     * @return
-     * @throws Exception
+     * @param customerData 用户信息
+     * @param strKey key
+     * @return 加密后的用户信息
+     * @throws Exception 加密过程出错
      */
     public String thirdAppAesEncrypt(String customerData, String strKey) throws Exception {
         cipher = Cipher.getInstance(CIPHER_ALGORITHM_CBC);
