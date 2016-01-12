@@ -3,8 +3,8 @@
 友好速搭 API SDK for Java
 
 [![Build status](https://img.shields.io/travis/Obzer/yhsd-api-java.svg?style=flat-square)](https://travis-ci.org/Obzer/yhsd-api-java)
+[![Coverage Status](https://coveralls.io/repos/Obzer/yhsd-api-java/badge.svg?branch=master&service=github)](https://coveralls.io/github/Obzer/yhsd-api-java?branch=master)
 [![Coverage Status](https://img.shields.io/coveralls/Obzer/yhsd-api-node.java?style=flat-square)](https://coveralls.io/repos/Obzer/yhsd-api-java)
-
 ## 安装
 
 
