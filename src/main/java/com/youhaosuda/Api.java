@@ -41,6 +41,7 @@ public class Api {
      * http get请求
      *
      * @param path 请求的路径
+     * @param params 请求的参数
      * @return api返回的结果
      */
     public YhsdResponse get(String path, Map<String, String> params) {

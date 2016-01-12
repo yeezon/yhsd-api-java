@@ -21,6 +21,7 @@ public class Yhsd {
 
     /**
      * 使用默认配置,apiHost,appHost以及请求方式使用生产环境的地址
+     * @return sdk实例
      */
     public static Yhsd getInstance() {
         instance.localApiHost = null;
@@ -35,6 +36,7 @@ public class Yhsd {
      * @param apiHost      api调用地址
      * @param appHost      app地址
      * @param httpProtocol 请求方式
+     * @return 本地运行的sdk实例
      */
     public static Yhsd getInstance(String apiHost, String appHost, String httpProtocol) {
         instance.localApiHost = apiHost;
@@ -62,6 +64,7 @@ public class Yhsd {
      * @param appSecret   插件/应用的appSecret,可在合作伙伴后台获取
      * @param redirectUrl 用于开放应用，接受code等参数的地址,详情见文档开放应用的第四步
      * @param scope       插件/应用的权限
+     * @throws YhsdException 公有应用应至少有一个权限
      * @return Auth的实例
      */
     public Auth auth(String appKey, String appSecret, String redirectUrl, String[] scope) throws YhsdException {
@@ -86,7 +89,7 @@ public class Yhsd {
 
     /**
      * 获得一个webHook实例
-     * @param webHookToken
+     * @param webHookToken webhookToken
      * @return
      */
     public WebHook webHook(String webHookToken) {
