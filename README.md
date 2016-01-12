@@ -2,8 +2,8 @@
 
 友好速搭 API SDK for Java
 
-[![Build status](https://img.shields.io/travis/Obzer/yhsd-api-java.svg?style=flat-square)](https://travis-ci.org/Obzer/yhsd-api-java)
-[![Coverage Status](https://coveralls.io/repos/Obzer/yhsd-api-java/badge.svg?branch=master&service=github)](https://coveralls.io/github/Obzer/yhsd-api-java?branch=master)
+[![Build status](https://img.shields.io/travis/yeezon/yhsd-api-java.svg?style=flat-square)](https://travis-ci.org/yeezon/yhsd-api-java)
+[![Coverage Status](https://coveralls.io/repos/yeezon/yhsd-api-java/badge.svg?branch=master&service=github)](https://coveralls.io/github/yeezon/yhsd-api-java?branch=master)
 ## 安装
 
 
@@ -17,7 +17,7 @@
 等待更新
 ```
 <br>
-或者你也可以直接[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0.1/yhsd-api-java.jar)我们已经打包好的jar
+或者你也可以直接[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0.2/yhsd-api-java.jar)我们已经打包好的jar
 
 
 ## 介绍
