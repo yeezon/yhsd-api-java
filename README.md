@@ -9,12 +9,16 @@
 
 #### maven
 ```xml
-等待更新
+<dependency>
+    <groupId>com.youhaosuda</groupId>
+    <artifactId>yhsd-sdk-java</artifactId>
+    <version>1.0.2</version>
+</dependency>
 ```
 <br>
 #### gradle
 ```coffeescript
-等待更新
+compile 'com.youhaosuda:yhsd-sdk-java:1.0.2'
 ```
 <br>
 或者你也可以直接[下载](https://github.com/yeezon/yhsd-api-java/releases/download/1.0.2/yhsd-api-java.jar)我们已经打包好的jar
